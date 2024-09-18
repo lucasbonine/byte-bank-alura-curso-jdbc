@@ -13,16 +13,16 @@ import java.util.Set;
 
 public class ContaService {
 	
-	private ConnectionFactory connectionFactory;
+	ConnectionFactory conn;
 	
 	public ContaService() {
-		connectionFactory = new ConnectionFactory();
+		conn = new ConnectionFactory();
 	}
 
     private Set<Conta> contas = new HashSet<>();
 
     public Set<Conta> listarContasAbertas() {
-        return contas;
+    		return new ContaDAO(conn.recuperarConexao()).listarContasAbertas();
     }
 
     public BigDecimal consultarSaldo(Integer numeroDaConta) {
@@ -38,12 +38,8 @@ public class ContaService {
         }
         
         
-        Connection conn = connectionFactory.recuperarConexao();
-        ContaDAO contaDAO = new ContaDAO(conn);
+        ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao()); //injeção de dependência
         contaDAO.abrir(conta, cliente);
-        
-        
-        //contas.add(conta);
     }
 
     public void realizarSaque(Integer numeroDaConta, BigDecimal valor) {

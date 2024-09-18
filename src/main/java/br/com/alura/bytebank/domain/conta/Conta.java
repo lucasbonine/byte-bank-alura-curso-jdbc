@@ -14,7 +14,7 @@ public class Conta {
     public Conta(Integer numero, Cliente titular) {
         this.numero = numero;
         this.titular = titular;
-        this.saldo = BigDecimal.ZERO;
+        this.saldo =  BigDecimal.ZERO;
     }
 
     public boolean possuiSaldo() {
