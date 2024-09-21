@@ -15,7 +15,7 @@ public class BytebankApplication {
 
     public static void main(String[] args) {
         var opcao = exibirMenu();
-        while (opcao != 8) {
+        while (opcao != 9) {
             try {
                 switch (opcao) {
                     case 1:
@@ -39,6 +39,9 @@ public class BytebankApplication {
                     case 7:
                         realizarDeposito();
                         break;
+                    case 8:
+                    	realizarTransferencia();
+                        break;
                 }
             } catch (RegraDeNegocioException e) {
                 System.out.println("Erro: " +e.getMessage());
@@ -61,7 +64,8 @@ public class BytebankApplication {
                 5 - Consultar saldo de uma conta
                 6 - Realizar saque em uma conta
                 7 - Realizar depósito em uma conta
-                8 - Sair
+                8 - Realizar Transferência entre contas
+                9 - Sair
                 """);
         return teclado.nextInt();
     }
@@ -143,11 +147,27 @@ public class BytebankApplication {
         teclado.next();
     }
     
+    private static void realizarTransferencia() {
+    	 System.out.println("Digite o número da conta origem:");
+         var numeroDaContaOrigem = teclado.nextInt();
+         
+         System.out.println("Digite o número da conta destino:");
+         var numeroDaContaDestino = teclado.nextInt();
+         
+         System.out.println("Digite o valor da transferência:");
+         var valor = teclado.nextBigDecimal();
+         
+         service.realizarTransferencia(numeroDaContaOrigem, numeroDaContaDestino, valor);
+         
+         System.out.println("Transferência realizada com sucesso!");
+         System.out.println("Pressione qualquer tecla e de ENTER para voltar ao menu principal");
+         teclado.next();
+    }
+    
     private static void listarContaPorNumeroCliente() {
     	System.out.println("Digite o número da conta:");
         var numeroDaConta = teclado.nextInt();
         Conta conta = service.buscarContaPorNumero(numeroDaConta);
         System.out.println(conta.toString());
-    	
     }
 }

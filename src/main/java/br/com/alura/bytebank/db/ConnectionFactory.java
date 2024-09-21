@@ -11,7 +11,7 @@ public class ConnectionFactory {
 	
 	public Connection recuperarConexao() {	
 		try {
-			System.out.println("Número de conexões: " + ++numeroConexoes);
+			//System.out.println("Número de conexões: " + ++numeroConexoes);
 			return createDataSource().getConnection();
 		}catch(SQLException e){
 			throw new RuntimeException(e); //evita o retorno de null, por isso passa
@@ -26,5 +26,5 @@ public class ConnectionFactory {
 		config.setMaximumPoolSize(10);
 		return new HikariDataSource(config);
 	}
-	
+
 }

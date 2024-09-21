@@ -64,6 +64,12 @@ public class ContaService {
         alterarSaldo(numeroDaConta, novoValorSaldoConta);
     }
     
+    public void realizarTransferencia(Integer numeroContaOrigem, Integer numeroContaDestino, BigDecimal valor) {
+    	realizarSaque(numeroContaOrigem, valor);
+    	realizarDeposito(numeroContaDestino, valor);
+    	
+    }
+    
     private void alterarSaldo(Integer numeroConta, BigDecimal valor) {
     	ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao());
         contaDAO.alterarSaldoConta(numeroConta, valor);
