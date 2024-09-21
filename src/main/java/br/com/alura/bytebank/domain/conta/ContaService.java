@@ -56,12 +56,14 @@ public class ContaService {
     }
 
     public void realizarDeposito(Integer numeroDaConta, BigDecimal valor) {
-        var conta = buscarContaPorNumero(numeroDaConta);
+        Conta conta = buscarContaPorNumero(numeroDaConta);
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do deposito deve ser superior a zero!");
         }
 
-        conta.depositar(valor);
+        ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao()); //injeção de dependência
+        BigDecimal novoValorSaldoConta = conta.getSaldo().add(valor);
+        contaDAO.alterarSaldoConta(conta.getNumero(), novoValorSaldoConta);
     }
 
     public void encerrar(Integer numeroDaConta) {
@@ -72,12 +74,13 @@ public class ContaService {
 
         contas.remove(conta);
     }
-
-    private Conta buscarContaPorNumero(Integer numero) {
-        return contas
-                .stream()
-                .filter(c -> c.getNumero() == numero)
-                .findFirst()
-                .orElseThrow(() -> new RegraDeNegocioException("Não existe conta cadastrada com esse número!"));
+    
+    public Conta buscarContaPorNumero(Integer numero) {
+    	ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao()); //injeção de dependência
+        Conta conta = contaDAO.listarContaPorNumeroCliente(numero);
+        if(conta != null)
+        	return conta;
+        else
+        	throw new RegraDeNegocioException("Conta não localizada.");
     }
 }
