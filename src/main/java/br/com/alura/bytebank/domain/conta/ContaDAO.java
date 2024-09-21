@@ -94,7 +94,7 @@ public class ContaDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setBigDecimal(1, valor);
 			ps.setInt(2, numeroConta);
-			boolean retorno = ps.execute();
+			ps.execute();
 			
 			ps.close();
 			conn.close(); //volta para o pool de conexões

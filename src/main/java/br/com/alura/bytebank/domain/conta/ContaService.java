@@ -48,11 +48,11 @@ public class ContaService {
             throw new RegraDeNegocioException("Valor do saque deve ser superior a zero!");
         }
 
-        if (valor.compareTo(conta.getSaldo()) > 0) {
+        if (valor.compareTo(conta.getSaldo()) > 0) { //valor > saldo
             throw new RegraDeNegocioException("Saldo insuficiente!");
         }
-
-        conta.sacar(valor);
+        BigDecimal novoValorSaldoConta = conta.getSaldo().subtract(valor);
+        alterarSaldo(numeroDaConta, novoValorSaldoConta);
     }
 
     public void realizarDeposito(Integer numeroDaConta, BigDecimal valor) {
@@ -60,10 +60,13 @@ public class ContaService {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RegraDeNegocioException("Valor do deposito deve ser superior a zero!");
         }
-
-        ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao()); //injeção de dependência
         BigDecimal novoValorSaldoConta = conta.getSaldo().add(valor);
-        contaDAO.alterarSaldoConta(conta.getNumero(), novoValorSaldoConta);
+        alterarSaldo(numeroDaConta, novoValorSaldoConta);
+    }
+    
+    private void alterarSaldo(Integer numeroConta, BigDecimal valor) {
+    	ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao());
+        contaDAO.alterarSaldoConta(numeroConta, valor);
     }
 
     public void encerrar(Integer numeroDaConta) {
