@@ -7,9 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.management.RuntimeErrorException;
-
 import br.com.alura.bytebank.domain.RegraDeNegocioException;
 import br.com.alura.bytebank.domain.cliente.Cliente;
 import br.com.alura.bytebank.domain.cliente.DadosCadastroCliente;
@@ -141,6 +138,29 @@ public class ContaDAO {
         }
         return conta;
     }
+	
+	public void deletar(Integer numeroConta) {
+		String sql = "DELETE FROM conta WHERE numero = ?";
+		
+		PreparedStatement ps = null;
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, numeroConta);
+			ps.execute();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new RegraDeNegocioException("Ocorreu um erro de SQL, favor verificar");
+		}finally {
+			try {
+				if(ps != null)
+					ps.close();
+				if(conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	
 

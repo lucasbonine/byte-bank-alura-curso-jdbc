@@ -5,10 +5,6 @@ import br.com.alura.bytebank.domain.RegraDeNegocioException;
 import br.com.alura.bytebank.domain.cliente.Cliente;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.Set;
 
 public class ContaService {
@@ -18,8 +14,6 @@ public class ContaService {
 	public ContaService() {
 		conn = new ConnectionFactory();
 	}
-
-    private Set<Conta> contas = new HashSet<>();
 
     public Set<Conta> listarContasAbertas() {
     		return new ContaDAO(conn.recuperarConexao()).listarContasAbertas();
@@ -33,12 +27,11 @@ public class ContaService {
     public void abrir(DadosAberturaConta dadosDaConta) {
         var cliente = new Cliente(dadosDaConta.dadosCliente());
         var conta = new Conta(dadosDaConta.numero(), cliente);
-        if (contas.contains(conta)) {
-            throw new RegraDeNegocioException("Já existe outra conta aberta com o mesmo número!");
-        }
-        
-        
         ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao()); //injeção de dependência
+        
+        if(null != contaDAO.listarContaPorNumeroCliente(conta.getNumero())) {
+        	throw new RegraDeNegocioException("Já existe outra conta aberta com o mesmo número!");        	
+        }
         contaDAO.abrir(conta, cliente);
     }
 
@@ -81,7 +74,8 @@ public class ContaService {
             throw new RegraDeNegocioException("Conta não pode ser encerrada pois ainda possui saldo!");
         }
 
-        contas.remove(conta);
+        ContaDAO contaDAO = new ContaDAO(conn.recuperarConexao());
+        contaDAO.deletar(numeroDaConta);
     }
     
     public Conta buscarContaPorNumero(Integer numero) {

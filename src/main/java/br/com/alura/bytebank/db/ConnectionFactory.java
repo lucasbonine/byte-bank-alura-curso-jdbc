@@ -7,7 +7,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class ConnectionFactory {
 	
-	private static int numeroConexoes = 0;
+	//private static int numeroConexoes = 0;
 	
 	public Connection recuperarConexao() {	
 		try {
